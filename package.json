@@ -1,13 +1,18 @@
 {
-  "name": "easynpm",
+  "name": "@byodian/easynpm",
   "version": "0.0.1",
   "description": "print the dependencies infomation of a npm open source project",
   "main": "index.js",
   "type": "module",
+  "keywords": ["node-cli"],
+  "homepage": "https://github.com/byodian/easynpm",
+  "bin": {
+    "easynpm": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "byodian",
   "license": "ISC",
   "dependencies": {
     "chalk": "^5.1.0",

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import chalk from 'chalk';
 import { get } from './utils/request.js';
 import { httpsAgent } from './utils/getHttpsAgent.js'
