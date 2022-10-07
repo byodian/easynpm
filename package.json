@@ -1,14 +1,12 @@
 {
   "name": "@byodian/easynpm",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "print the dependencies infomation of a npm open source project",
   "main": "index.js",
   "type": "module",
   "keywords": ["node-cli"],
   "homepage": "https://github.com/byodian/easynpm",
-  "bin": {
-    "easynpm": "index.js"
-  },
+  "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
