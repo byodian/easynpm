@@ -1,6 +1,6 @@
 {
-  "name": "@byodian/easynpm",
-  "version": "0.0.4",
+  "name": "easynpmdep",
+  "version": "1.0.0",
   "description": "print the dependencies infomation of a npm open source project",
   "main": "index.js",
   "type": "module",

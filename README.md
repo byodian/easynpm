@@ -5,8 +5,5 @@ Find out all of the dependencies infomation of a npm open source project for eas
 ## Usage
 
 ```
-npx @byodian/easynpm <open-source-name>
-# For example
-
-npx @byodian/easynpm @byodian/eslint-config
+npx easynpmdep @byodian/eslint-config
 ```
