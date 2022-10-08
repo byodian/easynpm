@@ -85,6 +85,16 @@ const getDependencies = async function (err, repositoryName) {
       printDepLink(dependencies);
     }
   } catch (err) {
+    if (err.code === 'ECONNREFUSED') {
+      spinner.stop('error');
+      log(
+        chalk.cyan(
+          'info',
+          chalk.blue('Perhaps you are in mainland china, please break through the firewall to access')
+        )
+      );
+      return;
+    }
     spinner.stop('error');
     getDependencies(err, repositoryName);
   }
@@ -108,7 +118,7 @@ export const init = async function (err, name) {
 
     if (!repositoryLink) {
       log(
-        chalk.blue(
+        chalk.cyan(
           'info',
           chalk.blue('The github link of the open source project')
         )
@@ -122,6 +132,19 @@ export const init = async function (err, name) {
     const repositoryName = repositoryLink.replace('https://github.com', '');
     await getDependencies(null, repositoryName);
   } catch (err) {
+    if (err.code === 'ECONNREFUSED') {
+      spinner.stop('error');
+      
+      log(
+        chalk.cyan(
+          'info',
+          chalk.blue('Perhaps you are in mainland china, please break through the firewall to access')
+        )
+      );
+
+      return;
+    }
+    // go ahead
     spinner.stop('error');
     init(err, name);
   }
