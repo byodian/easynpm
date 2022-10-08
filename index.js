@@ -4,12 +4,19 @@ import chalk from 'chalk';
 import { get } from './utils/request.js';
 import { toTwoNumber } from './utils/toTwoNumber.js';
 import { httpsAgent } from './utils/getHttpsAgent.js';
+import { createSnipper } from './utils/createSnipper.js';
 import * as cheerio from 'cheerio';
-import ora from 'ora';
 
 const rawArg = process.argv.slice(2);
 const NPM_LINK = 'https://npmjs.com/package';
 const log = console.log;
+
+export const handleError = (snipper) => {
+  const warning = 'Perhaps you are in mainland china, please break through the firewall to access';
+
+  snipper.stop('error');
+  log(chalk.cyan('info', chalk.blue(warning)));
+}
 
 export const printDepLink = function (deps) {
   Object.keys(deps).forEach((key, index) => {
@@ -48,32 +55,11 @@ export const getPackages = async function (repoName) {
   };
 };
 
-const createSnipper = function (err, text) {
-  const spinnerText = err
-    ? `There appears to be trouble with your network connection. Retrying...`
-    : `Loading ${text} dependencies...`;
-  const spinner = ora(spinnerText).start();
-
-  const stop = function (type = 'success') {
-    spinner.stopAndPersist({
-      text:
-        type === 'success' ? 'Congratulations!' : 'Opps something was wrong!',
-      symbol: type === 'success' ? chalk.green('✔️') : chalk.red('✖️'),
-    });
-  };
-
-  return {
-    spinner,
-    stop,
-  };
-};
-
 const getDependencies = async function (err, repositoryName) {
-  const spinner = createSnipper(err, repositoryName);
-
+  const snipper = createSnipper(err, repositoryName);
   try {
     const { dependencies, devDependencies } = await getPackages(repositoryName);
-    spinner.stop();
+    snipper.succeed('Congratulations!');
 
     if (devDependencies) {
       log(chalk.gray.bold('devDependencies'));
@@ -86,43 +72,27 @@ const getDependencies = async function (err, repositoryName) {
     }
   } catch (err) {
     if (err.code === 'ECONNREFUSED') {
-      spinner.stop('error');
-      log(
-        chalk.cyan(
-          'info',
-          chalk.blue('Perhaps you are in mainland china, please break through the firewall to access')
-        )
-      );
+      handleError(snipper);
       return;
     }
-    spinner.stop('error');
+    snipper.fail();
     getDependencies(err, repositoryName);
   }
 };
 
 export const init = async function (err, name) {
   if (!name) {
-    log(
-      chalk.cyan(
-        'info',
-        chalk.blue('Please enter the name of a open source project')
-      )
-    );
+    log(chalk.cyan('info', chalk.blue('Please enter the name of a open source project')));
     return;
   }
 
-  const spinner = createSnipper(err, name);
+  const snipper = createSnipper(err, name);
   try {
     const { repositoryLink, homePageLink } = await getRepoName(name);
-    spinner.stop();
+    snipper.succeed('Congratulations!');
 
     if (!repositoryLink) {
-      log(
-        chalk.cyan(
-          'info',
-          chalk.blue('The github link of the open source project')
-        )
-      );
+      log(chalk.cyan('info', chalk.blue('The github link of the open source project')));
       return;
     }
 
@@ -133,19 +103,11 @@ export const init = async function (err, name) {
     await getDependencies(null, repositoryName);
   } catch (err) {
     if (err.code === 'ECONNREFUSED') {
-      spinner.stop('error');
-      
-      log(
-        chalk.cyan(
-          'info',
-          chalk.blue('Perhaps you are in mainland china, please break through the firewall to access')
-        )
-      );
-
+      handleError(snipper);
       return;
     }
     // go ahead
-    spinner.stop('error');
+    snipper.fail();
     init(err, name);
   }
 };

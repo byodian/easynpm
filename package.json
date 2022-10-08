@@ -1,6 +1,6 @@
 {
   "name": "easynpmdep",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "print the dependencies infomation of a npm open source project",
   "main": "index.js",
   "type": "module",
