@@ -71,8 +71,10 @@ const getDependencies = async function (err, repositoryName) {
       printDepLink(dependencies);
     }
   } catch (err) {
-    if (err.code === 'ECONNREFUSED') {
+    if (err.code !== 'ECONNRESET') {
       handleError(snipper);
+      console.log(chalk.cyan('info', chalk.blue(err.message)))
+      console.log('error', JSON.stringify(err, null, 2))
       return;
     }
     snipper.fail();
@@ -99,11 +101,13 @@ export const init = async function (err, name) {
     log(chalk.cyan(`${name} repository`, `(${chalk.blue(repositoryLink)})`));
     log(chalk.cyan(`${name} homePage`, `(${chalk.blue(homePageLink)})`));
 
-    const repositoryName = repositoryLink.replace('https://github.com', '');
+    const repositoryName = repositoryLink.replace('https://github.com/', '');
     await getDependencies(null, repositoryName);
   } catch (err) {
-    if (err.code === 'ECONNREFUSED') {
+    if (err.code === 'ECONNRESET') {
       handleError(snipper);
+      console.log(chalk.cyan('info', chalk.blue(err.message)))
+      console.log('error', JSON.stringify(err, null, 2))
       return;
     }
     // go ahead
