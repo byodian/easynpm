@@ -1,6 +1,6 @@
 {
   "name": "easynpmdep",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "print the dependencies infomation of a npm open source project",
   "main": "index.js",
   "type": "module",
@@ -17,8 +17,6 @@
   "dependencies": {
     "chalk": "^5.1.0",
     "cheerio": "^1.0.0-rc.12",
-    "node-fetch": "^3.2.10",
-    "ora": "^6.1.2",
-    "terminal-link": "^3.0.0"
+    "node-fetch": "^3.2.10"
   }
 }
